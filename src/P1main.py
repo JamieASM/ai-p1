@@ -59,12 +59,12 @@ print("Algorithm: "+algo)
 print("Grid Size: "+str(n))
 print("Colours: "+str(len(colours)))
 print("Conf:\n")
-printGrid(grid)
+printGrid(grid, True)
 
 #*************** Run and Output ***************#
 
 #run the search 
-pathCost=runSearch(algo, n, colours, grid, time_limit, verbose)
+pathCost = runSearch(algo, n, colours, grid, time_limit, verbose)
 
 #print the path cost 
 print(pathCost)

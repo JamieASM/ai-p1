@@ -1,3 +1,6 @@
+from copy import deepcopy
+
+
 class Node:
     def __init__(self, parent, state):
         self.state = state
@@ -31,45 +34,59 @@ class Node:
 
     # Finds the successor states from the current node
     def getSuccStates(self):
-        def isValid(x, y, colour, explored):
-            return 0 <= x < len(grid) and 0 <= y < len(grid) and (x, y) not in explored and grid[x][y] == colour
-
         grid = self.state
         n = len(grid)
-        explored = set()
+
         succ_states = []
+        explored = [] # contains the coordinates we have already checked
 
-        for x in range(n):
-            for y in range(n):
-                colour = grid[x][y]
+        for r in range(n):
+            for c in range(n):
+                colour = grid[r][c]
 
-                if colour == '-' or (x, y) in explored:
+                # skip if we have already explored this node, or it is empty
+                if [r, c] in explored or colour == '-':
                     continue
 
-                block_group = []
-                possible_nodes = [(x, y)]
-                explored.add((x, y))
+                # Otherwise, set up the environment to find the next possible path
+                explored.append([r, c])
+                possibleGrid = deepcopy(grid)
+                possibleGrid[r][c] = '-'
+                count = 1 # counter for the connected colours
 
-                while possible_nodes:
-                    x_pos, y_pos = possible_nodes.pop()
-                    block_group.append((x_pos, y_pos))
+                for x_offset, y_offset in [[-1, 0], [1, 0], [0, -1], [0, 1]]:
+                    x, y = (r + x_offset), (c + y_offset)
 
-                    for x_dir, y_dir in [-1, 0], [1, 0], [0, -1], [0, 1]:
-                        new_x, new_y = (x_pos + x_dir), (y_pos + y_dir)
+                    if inBounds(x, y, n) and isColour(colour, grid[x][y]):
+                        count = visitNeighbour(count, possibleGrid, explored, x, y, colour)
 
-                        if isValid(new_x, new_y, colour, explored):
-                            explored.add((new_x, new_y))
-                            possible_nodes.append((new_x, new_y))
-
-                if len(block_group) > 0:
-                    possible_state = [row[:] for row in grid]
-
-                    for a, b in block_group:
-                        possible_state[a][b] = '-'
-
-                    succ_states.append(compress(possible_state))
+                if count >= 2:
+                    succ_states.append(compress(possibleGrid))
 
         return succ_states
+
+def visitNeighbour(count, grid, explored, r, c, colour):
+    # there is a chance that we have already seen this (due to backtracking)
+    if [r, c] in explored:
+        return count
+
+    explored.append([r, c])
+    grid[r][c] = '-'
+    count += 1
+
+    for x_offset, y_offset in [[-1, 0], [1, 0], [0, -1], [0, 1]]:
+        x, y = (r + x_offset), (c + y_offset)
+
+        if inBounds(x, y, len(grid)) and isColour(colour, grid[x][y]):
+            count = visitNeighbour(count, grid, explored, x, y, colour)
+
+    return count
+
+def inBounds(x, y, n):
+    return 0 <= x < n and 0 <= y < n
+
+def isColour(target, possible):
+    return target == possible
 
 def compress(grid):
     n = len(grid)

@@ -22,12 +22,14 @@ def searchAH1(grid, verbose):
         nodes_explored += 1
 
         if verbose:
-            printGrid(nd.getState())
+            printGrid(nd.getState(), False)
             print("%")
 
         if nd.isGoal():
-            print(f'{nodes_explored}\n')
-            return nd.getPathCost
+            if verbose:
+                print(nodes_explored)
+
+            return nd.getPathCost()
         else:
             succ_states = nd.getSuccStates()
             succ_nodes = []

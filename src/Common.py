@@ -3,7 +3,7 @@ NOT_IMPLEMENTED = -100
 NOT_FOUND = 0
 
 # Prints out a formatted version of the grid
-def printGrid(grid):
+def printGrid(grid, newline):
     p = ""
 
     for i in range(len(grid)):
@@ -11,6 +11,7 @@ def printGrid(grid):
             st = grid[i][j]  # add row characters
             p += st + ""
 
-        p += "\n"  # new row
+        if i < (len(grid) - 1) or newline:
+            p += "\n"  # new row
 
     print(p)
