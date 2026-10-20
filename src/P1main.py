@@ -1,68 +1,31 @@
 import math
+import signal
 import sys
 
-from src.Frontier import Frontier
-from src.Node import AH1_Node
-
-NOT_TERMINATED = -200
-NOT_IMPLEMENTED = -100
-NOT_FOUND = 0
-
-# Prints out a formatted version of the grid 
-def printGrid(grid):
-	p = ""
-    
-	for i in range(len(grid)):
-		for j in range(len(grid)):
-			st = grid[i][j] #add row characters
-			p += st + ""
-
-		p += "\n" #new row 
-
-	print(p)
+from Search import searchAH1
+from Common import NOT_IMPLEMENTED, NOT_TERMINATED, printGrid
 
 # Entry point to the search algorithm
-# n = number of rows / columns
-# grid = The initial grid configuration
-# time_limit = the max amount of time we can wait for a response
-# verbose = will every step be printed out
 def runSearch(algo, n, colours, grid, time_limit, verbose):
-	#implement your search
-	match algo:
-		case "AH1":
-			return searchAHI(n, colours, grid, time_limit, verbose)
-		case "AH2":
-			return NOT_IMPLEMENTED
-		case "AH3":
-			return NOT_IMPLEMENTED
-	return NOT_IMPLEMENTED
+	# set up the timer
+	signal.signal(signal.SIGALRM, handle_timeout)
+	signal.alarm(time_limit)
 
-def searchAHI(n, colours, grid, time_limit, verbose):
-	initial_node = AH1_Node(None, grid)
-	frontier = Frontier(initial_node)
-	explored = set()
-	
-	while not frontier.isEmpty():
-		if verbose:
-			print()
+	try:
+		#implement your search
+		match algo:
+			case "AH1":
+				return searchAH1(grid, verbose)
+			case "AH2":
+				return NOT_IMPLEMENTED
+			case "AH3":
+				return NOT_IMPLEMENTED
+		return NOT_IMPLEMENTED
+	except TimeoutError:
+		return NOT_TERMINATED
 
-		nd = frontier.remove()
-		explored.add(nd)
-
-		if nd.isGoal():
-			return nd
-		else:
-			succ_states = nd.getSuccStates()
-			succ_nodes = []
-			
-			for s in succ_states:
-				if not s in explored:
-					succ_nodes.append(AH1_Node(nd, s))
-
-		frontier.insertPriority(succ_nodes)
-
-	return NOT_FOUND
-
+def handle_timeout(signum, frame):
+	raise TimeoutError()
 
 # START OF PROGRAM
 if len(sys.argv) < 2:
@@ -102,10 +65,6 @@ printGrid(grid)
 
 #run the search 
 pathCost=runSearch(algo, n, colours, grid, time_limit, verbose)
-
-if(verbose): # TODO
-    #remember to include required printing for verbose mode
-	pass
 
 #print the path cost 
 print(pathCost)

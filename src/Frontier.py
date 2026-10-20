@@ -1,11 +1,9 @@
-from src.Node import Node
+from Node import Node
 
 # Represents the frontier list. This is using a binary min heap data structure.
 class Frontier:
     # Initialises the frontier with a single item array of the initial node
     def __init__(self, initial_node):
-        # TODO: Ensure the 'initial_node' is of the correct type
-
         self.arr = [initial_node]
 
     # Single node into the frontier
@@ -52,8 +50,10 @@ class Frontier:
 
     # removes the top element, arr[0], from the frontier list and returns it
     def remove(self):
-        # TODO: fix
         return self.arr.pop(0)
+
+    def getNodes(self):
+        return self.arr
 
 # Helper functions
 def getParent(i):
