@@ -1,26 +1,25 @@
 from copy import deepcopy
 
-
 class Node:
     def __init__(self, parent, state):
         self.state = state
         self.parent = parent
         self.path_cost =  0 if parent is None else parent.path_cost + 1
+        self.h = len(set().union(*self.state) - {'-'})
 
     # Defines the rules for two nodes to be equal. Here, nodes are considered
     # to be equal if their states are identical
     def __eq__(self, node_2):
         return self.state == node_2.state
 
-    def getPathCost(self):
-        return self.path_cost
+    def getF(self):
+        return self.h + self.path_cost
+
+    def getH(self):
+        return self.h
 
     def getState(self):
         return self.state
-
-    def setCost(self, amount):
-        if amount > 0:
-            self.path_cost = amount
 
     def isGoal(self):
         grid = self.state

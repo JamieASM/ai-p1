@@ -23,8 +23,8 @@ class Frontier:
         while i > 0:
             parent_index = getParent(i)
 
-            new_cost = self.arr[i].getPathCost()
-            parent_cost = self.arr[parent_index].getPathCost()
+            new_cost = self.arr[i].getF()
+            parent_cost = self.arr[parent_index].getF()
 
             if new_cost < parent_cost:
                 self.arr[i], self.arr[parent_index] = self.arr[parent_index], self.arr[i]
