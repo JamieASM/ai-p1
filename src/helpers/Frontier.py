@@ -1,4 +1,4 @@
-from Node import Node
+from helpers.Node import Node
 
 # Represents the frontier list. This is using a binary min heap data structure.
 class Frontier:

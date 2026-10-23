@@ -2,22 +2,35 @@ import math
 import signal
 import sys
 
-from Search import searchAH1
-from Common import NOT_IMPLEMENTED, NOT_TERMINATED, printGrid
+from helpers.Search import search
+from helpers.utils import NOT_IMPLEMENTED, NOT_TERMINATED, h_AH1, h_AH2, printGrid
 
-# Entry point to the search algorithm
-def runSearch(algo, n, colours, grid, time_limit, verbose):
+
+def runSearch(algo, grid, time_limit, verbose):
+	"""
+	    Entry point to the search algorithm. Selects the heuristic to use, according 'algo'.
+
+	    Args:
+	        algo (str): The heuristic algorithm.
+	        grid (list): The initial grid.
+	        time_limit (int): The number of seconds the algorithm can run before timing out.
+	        verbose (bool): When enabled, extra debugging information is printed to standard output.
+
+	    Returns:
+	        int: Path cost
+	"""
+
 	# set up the timer
 	signal.signal(signal.SIGALRM, handle_timeout)
 	signal.alarm(time_limit)
 
 	try:
-		#implement your search
+		# implement your search
 		match algo:
 			case "AH1":
-				return searchAH1(grid, verbose)
+				return search(grid, verbose, h_AH1)
 			case "AH2":
-				return NOT_IMPLEMENTED
+				return search(grid, verbose, h_AH2)
 			case "AH3":
 				return NOT_IMPLEMENTED
 		return NOT_IMPLEMENTED
@@ -64,7 +77,7 @@ printGrid(grid, True)
 #*************** Run and Output ***************#
 
 #run the search 
-pathCost = runSearch(algo, n, colours, grid, time_limit, verbose)
+pathCost = runSearch(algo, grid, time_limit, verbose)
 
 #print the path cost 
 print(pathCost)
