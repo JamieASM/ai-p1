@@ -1,13 +1,33 @@
 from helpers.Node import Node
 
+
 # Represents the frontier list. This is using a binary min heap data structure.
 class Frontier:
-    # Initialises the frontier with a single item array of the initial node
+    """
+        A class representing a Frontier.
+
+        Attributes:
+            arr (list): The frontier list which behaves as a binary min tree.
+    """
+
     def __init__(self, initial_node):
+        """
+        Initialises a Frontier object.
+
+        Parameters:
+            initial_node (Node): The first node in the frontier.
+        """
+
         self.arr = [initial_node]
 
-    # Single node into the frontier
     def insert(self, node):
+        """
+        Appends a single node into the frontier, and reorders accordingly.
+
+        Parameters:
+            node (Node): The node to be inserted into the frontier.
+        """
+
         try:
             if not isinstance(node, Node):
                 raise ValueError()
@@ -36,6 +56,13 @@ class Frontier:
 
     # Inserts a list of nodes into the frontier. These nodes will be ordered by their priority
     def insertPriority(self, nodes):
+        """
+        Inserts a list of nodes into the frontier.
+
+        Parameters:
+            nodes (list): The nodes to be appended to the frontier.
+        """
+
         try:
             nodes = list(nodes)
 
@@ -45,22 +72,65 @@ class Frontier:
         except ValueError:
             print("'nodes' is not of the type list.")
 
+    # *************** Helper functions ***************#
+
     def isEmpty(self):
+        """
+        States if the frontier is empty.
+
+        Returns:
+            bool
+        """
+
         return len(self.arr) == 0
 
-    # removes the top element, arr[0], from the frontier list and returns it
     def remove(self):
+        """
+        Returns:
+            Node: The top element of the frontier
+        """
+
         return self.arr.pop(0)
 
     def getNodes(self):
+        """
+        Returns:
+            list: The frontier nodes
+        """
+
         return self.arr
 
-# Helper functions
 def getParent(i):
+    """
+    Parameters:
+        i (int): The index of the current frontier node.
+
+    Returns:
+        int: The index of the current frontier node's parent node.
+    """
+
     return (i - 1) // 2
 
+
 def getLeftChild(i):
+    """
+    Parameters:
+        i (int): The index of the current frontier node.
+
+    Returns:
+        int: The index of the current frontier node's left child.
+    """
+
     return (2 * i) + 1
 
+
 def getRightChild(i):
+    """
+    Parameters:
+        i (int): The index of the current frontier node.
+
+    Returns:
+        int: The index of the current frontier node's right child.
+    """
+
     return (2 * i) + 2

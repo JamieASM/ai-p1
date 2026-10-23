@@ -26,7 +26,7 @@ class Node:
 
         self.state = state
         self.parent = parent
-        self.path_cost =  0 if parent is None else parent.getPathCost() + 1
+        self.path_cost = 0 if parent is None else parent.getPathCost() + 1
         self.h = hFunc(self)
 
     # *************** Getters for Attributes ***************#
@@ -47,26 +47,18 @@ class Node:
 
         return self.path_cost
 
-    def getH(self):
-        """
-        Returns:
-            int: The Node object's heuristic value.
-        """
-
-        return self.h
-
     def getF(self):
         """
-            Returns:
-                int: The Node object's f value. This the sum of the heuristic and the path cost.
+        Returns:
+            int: The Node object's f value. This the sum of the heuristic and the path cost.
         """
 
         return self.h + self.path_cost
 
     def isGoal(self):
         """
-            Returns:
-                bool: True if the grid is empty, false otherwise.
+        Returns:
+            bool: True if the grid is empty, false otherwise.
         """
 
         n = len(self.state)
@@ -103,7 +95,7 @@ class Node:
                 for x_offset, y_offset in [[-1, 0], [1, 0], [0, -1], [0, 1]]:
                     x, y = (r + x_offset), (c + y_offset)
 
-                    if inBounds(x, y, n) and isColour(colour, grid[x][y]) :
+                    if inBounds(x, y, n) and isColour(colour, grid[x][y]):
                         count = visitNeighbour(count, possibleGrid, explored, x, y, colour)
 
                 if count >= 2:
@@ -123,24 +115,70 @@ class Node:
         Returns:
             bool
         """
+
         return self.state == node_2.state
 
     # *************** Printer *************** #
 
     def printFrontierNode(self):
+        """
+        Prints the Node object in the format outlined for frontier nodes in the spec.
+        """
+
         p = toString(self.state, "", False)
 
         print(f'[{p}:{self.h}:{self.getF()}]')
 
+
 #*************** Helper functions for getSuccStates() ***************#
 
 def inBounds(x, y, n):
+    """
+    Checks if the x and y coordinates are the in the bounds of a grid.
+
+    Parameters:
+        x (int): X coordinate
+        y (int): Y coordinate
+        n (int): Length of the grid. Assumes the grid has an equal number of rows and columns.
+
+    Returns:
+        bool
+    """
+
     return 0 <= x < n and 0 <= y < n
 
-def isColour(targetColour, currentColour):
-    return targetColour == currentColour
+
+def isColour(c1, c2):
+    """
+    Checks if the colours match.
+
+    Parameters:
+        c1 (str): The first colour.
+        c2 (str): The second colour.
+
+    Returns:
+        bool
+    """
+
+    return c1 == c2
+
 
 def visitNeighbour(count, grid, explored, r, c, colour):
+    """
+    Recursive function. Checks a neighbouring node to see if there are any more nodes of a particular colour surrounding it.
+
+    Parameters:
+         count (int): The current size of the chain of same-colour grid squares.
+         grid (list): The current grid configuration.
+         explored (list): All coordinates that have already been seen across all searches. Avoids redundant checks.
+         r (int): The current row being checked.
+         c (int): The current column being checked.
+         colour (str): The target colour for the neighbours to also have.
+
+    Returns:
+        count
+    """
+
     # there is a chance that we have already seen this (due to backtracking)
     if [r, c] in explored:
         return count
@@ -157,7 +195,18 @@ def visitNeighbour(count, grid, explored, r, c, colour):
 
     return count
 
+
 def compress(grid):
+    """
+    Reorders the grid. Empty rows are moved upwards whilst empty columns are moved to the right.
+
+    Parameters:
+        grid (list): The current grid configuration
+
+    Returns:
+        list: The newly compressed grid
+    """
+
     n = len(grid)
 
     # sink each non-empty block
@@ -181,10 +230,21 @@ def compress(grid):
 
     return grid
 
+
 def transform(grid):
+    """
+    Swaps a particular grid's rows and columns.
+
+    Parameters:
+        grid (list): The grid to be transformed
+
+    Returns:
+        list: The newly transformed grid
+    """
+
     n = len(grid)
 
     return [
-        [ grid[r][c] for r in range(n) ]
+        [grid[r][c] for r in range(n)]
         for c in range(n)
     ]
