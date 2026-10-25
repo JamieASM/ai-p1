@@ -86,11 +86,60 @@ class Frontier:
 
     def remove(self):
         """
+        Removes the top element of the frontier and rearranges so that the frontier's children and parents remain accurate.
+
         Returns:
             Node: The top element of the frontier
         """
 
-        return self.arr.pop(0)
+        def inBounds(index):
+            """
+            Parameters:
+                index (int): The index to verify
+
+            Returns:
+                bool: True when the index is less than the length of the frontier array
+            """
+
+            return len(self.arr) > index
+
+        def isSmaller(cSmallest, contender):
+            """
+            Parameters:
+                cSmallest (Node): The current smallest F value node.
+                contender (Node): The node whose F value we are comparing.
+
+            Returns:
+                bool: True when the F value of the contender is smaller.
+            """
+
+            return contender.getF() < cSmallest.getF()
+
+        # swap top and bottom elements
+        top, bottom = self.arr[0], self.arr.pop()
+
+        if self.arr:
+            self.arr[0] = bottom
+
+            i = smallest = 0
+
+            while True:
+                left = getLeftChild(i)
+                right = getRightChild(i)
+
+                if inBounds(left) and isSmaller(self.arr[smallest], self.arr[left]):
+                    smallest = left
+                if inBounds(right) and isSmaller(self.arr[smallest], self.arr[right]):
+                    smallest = right
+
+                # breaking condition
+                if smallest == i:
+                    break
+
+                self.arr[i], self.arr[smallest] = self.arr[smallest], self.arr[i]
+                i = smallest
+        return top
+
 
     def getNodes(self):
         """

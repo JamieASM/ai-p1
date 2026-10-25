@@ -3,7 +3,7 @@ import signal
 import sys
 
 from helpers.Search import search
-from helpers.utils import NOT_IMPLEMENTED, NOT_TERMINATED, h_AH1, h_AH2, printGrid
+from helpers.utils import NOT_IMPLEMENTED, NOT_TERMINATED, NOT_FOUND, h_AH1, h_AH2, printGrid
 
 
 def runSearch(algo, grid, time_limit, verbose):
@@ -33,6 +33,7 @@ def runSearch(algo, grid, time_limit, verbose):
 				return search(grid, verbose, h_AH2)
 			case "AH3":
 				return NOT_IMPLEMENTED
+		# should never get to this point so if it does, I need to reevaluate
 		return NOT_IMPLEMENTED
 	except TimeoutError:
 		return NOT_TERMINATED
@@ -50,7 +51,17 @@ if len(sys.argv) < 2:
 #assume problem is correctly specified, set the problem components
 
 algo = sys.argv[1] # algorithm chosen
-conf = sys.argv[2] # configuration
+conf = sys.argv[2]  # configuration
+
+# Verify arguments
+if algo	not in ["AH1", "AH2", "AH3"]:
+	print("Incorrect algorithm argument provided. The algorithm provided must be one of the following: AH1 | AH2 | AH3.")
+	sys.exit()
+
+n = math.isqrt(len(conf))
+if n * n != len(conf):
+	print("The grid provided must be of size N x N (square).")
+	sys.exit()
 
 time_limit = 60 #run at most for 60s
 verbose = True if 'verbose' in sys.argv else False 
@@ -64,7 +75,7 @@ colours = set()
 for x in range(n):
 	for y in range(n):
 		grid[x][y] = conf[n * x + y]
-		colours.add(grid[x][y])
+		if grid[x][y] != "-": colours.add(grid[x][y])
 
 #*************** Print settings ***************#
 

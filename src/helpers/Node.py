@@ -222,9 +222,16 @@ def compress(grid):
     # move each block right to left
     temp = transform(grid)
 
-    for c in range(n):
-        if temp[c] == ['-' for _ in range(n)]:
-            temp.append(temp.pop(c))
+    i = 0
+    target = ["-" for _ in range(n)]
+    empties = temp.count(target)
+
+    while i < n and empties > 0:
+        if temp[i] == target:
+            temp.append(temp.pop(i))
+            empties -= 1 # found an instance
+        else:
+            i += 1
 
     grid = transform(temp)
 
