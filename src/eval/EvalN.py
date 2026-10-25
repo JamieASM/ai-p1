@@ -15,7 +15,7 @@ from collections import defaultdict
 import matplotlib
 import matplotlib.pyplot as plt
 
-from common import runP1main
+from common import runP1main, ALGORITHMS
 
 # *************** Constants *************** #
 
@@ -23,7 +23,6 @@ from common import runP1main
 SIZES = [3, 4, 5, 6, 7, 8, 9]
 COLOURS = list("RGB")
 GRIDS_PER_SIZE = range(10)
-ALGORITHMS = ["AH1", "AH2"]
 TIMEOUT = 60
 
 # For the csv file

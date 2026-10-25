@@ -9,7 +9,7 @@ Using randomised grids, so results may differ between runs.
 
 Running this file will produce a csv file "D_results.csv" and two graphs "cost_vs_d" and "time_vs_d".
 """
-from common import runP1main
+from common import runP1main, ALGORITHMS
 
 import csv
 import random
@@ -23,7 +23,6 @@ import matplotlib.pyplot as plt
 SIZE = 6
 COLOURS = list("ABCDEFGHI") # 9 colours
 GRIDS_PER_COLOUR = range(10)
-ALGORITHMS = ["AH1", "AH2"]
 TIMEOUT = 60
 
 # For the csv file

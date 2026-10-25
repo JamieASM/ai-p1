@@ -1,0 +1,11 @@
+# Brief explaination of main files:
+
+- **P1main.py** is the entry point for the actual A* algorithm
+- **Tests.py** are for the test cases on P1main and its helper files/functions
+- **Evaluations.py** generate mass amounts of data that can then be used to compare path cost vs N, path cost vs D, moves vs N and moves vs D
+
+Test and Evaluations do not require arguments. P1main does, however these arguments are exactly the same to that of the specification:
+
+```bash
+python3 P1main.py <AH1|AH2|AH3> <conf> [<verbose>]
+```

@@ -1,6 +1,7 @@
 import subprocess
 import sys
 
+ALGORITHMS = ["AH1", "AH2"]
 
 def runP1main(algo, grid):
     """
