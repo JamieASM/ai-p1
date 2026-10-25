@@ -11,11 +11,11 @@ Running this file will produce a csv file "N_results.csv".
 """
 import csv
 import random
-import subprocess
-import sys
 from collections import defaultdict
 import matplotlib
 import matplotlib.pyplot as plt
+
+from common import runP1main
 
 # *************** Constants *************** #
 
@@ -27,7 +27,7 @@ ALGORITHMS = ["AH1", "AH2"]
 TIMEOUT = 60
 
 # For the csv file
-CSV = "N_results.csv"
+CSV = "../N_results.csv"
 
 # *************** Generators *************** #
 
@@ -44,34 +44,9 @@ def makeGrid(size):
 
     return "".join(random.choice(COLOURS) for _ in range(size ** 2))
 
-def runP1main(algo, grid):
-    """
-    Runs P1main for a given algorithm and grid configuration.
-
-    Parameters:
-         algo (str): The algorithm to run.
-         grid (list): The grid configuration.
-
-    Returns:
-        list: Cost, Moves
-    """
-
-    try:
-        res = subprocess.run(
-            [sys.executable, "P1main.py", algo, grid, "verbose"], # Running in verbose to get the number of moves
-            capture_output=True,
-            text=True,
-            timeout=TIMEOUT
-        )
-        moves, cost = res.stdout.strip().splitlines()[-2:]
-    except subprocess.TimeoutExpired:
-        cost, moves = -200, 0
-
-    return cost, moves
-
 def makeGraph():
     # Read CSV and gather data
-    with open("N_results.csv", 'r') as f:
+    with open(CSV, 'r') as f:
         data = csv.DictReader(f)
 
         costs = defaultdict(list)  # key = (Algo, size), value = list of costs != -200, 0
@@ -94,7 +69,7 @@ def makeGraph():
                 moves[key].append(int(r["moves_count"]))
 
         # set up our plots (4)
-        fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(11, 4))
+        fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(12, 8))
 
         # Want a plot of mean path cost vs grid size (AH1 / AH2 separate lines)
         # costs per N != -200 or 0 averaged mapped to grid size
@@ -156,7 +131,7 @@ def startN():
     """
 
     # set up csv file.
-    with open("N_results.csv", "w", newline="") as f:
+    with open(CSV, "w", newline="") as f:
         w = csv.writer(f)
         w.writerow(["N", "colours_count", "conf", "algo", "cost", "moves_count"])
 
